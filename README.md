@@ -18,7 +18,7 @@
 
 ---
 
-## 📌 문제 정의
+## 문제 정의
 
 영어로 된 데이터베이스 강의자료로 공부하는 과정은 여러 도구로 흩어져 있습니다.
 
@@ -30,7 +30,7 @@
 
 **QueryNote AI는 이 흐름을 하나의 작업 공간으로 합쳤습니다.** 읽기, 필기, SQL 실습, 자기 점검이 지금 보고 있는 슬라이드를 중심으로 연결됩니다.
 
-## ✨ 주요 기능
+## 주요 기능
 
 | | 기능 | 설명 |
 |---|---|---|
@@ -50,7 +50,7 @@
 - **JOIN**: `NATURAL`, `INNER`, `CROSS`, `LEFT OUTER`, `RIGHT OUTER`, 셀프 조인
 - **제약조건**: `PRIMARY KEY`, `FOREIGN KEY`, `NOT NULL`, `UNIQUE`
 
-## 🏗️ 아키텍처
+## 아키텍처
 
 ```mermaid
 flowchart LR
@@ -79,7 +79,7 @@ flowchart LR
     QZ --> ST
 ```
 
-## 🔧 기술적 특징
+## 기술적 특징
 
 **여러 LLM을 이어 쓰는 퀴즈 생성 파이프라인**
 퀴즈는 정해진 순서(`OpenRouter → Groq → Gemini`, `QUIZ_PROVIDER`로 변경 가능)대로 LLM 제공자를 시도합니다. 각 응답은 다음 과정을 거칩니다.
@@ -95,7 +95,7 @@ flowchart LR
 **API 키 없이도 동작**
 필기 정리와 SQL 해설은 기기 안에서 생성되고, 퀴즈는 템플릿으로 대체됩니다. API 키가 없어도 핵심 학습 흐름은 그대로 사용할 수 있습니다.
 
-## 🛠 기술 스택
+## 기술 스택
 
 | 분야 | 기술 |
 |---|---|
@@ -105,7 +105,7 @@ flowchart LR
 | AI | OpenRouter, Groq, Google Gemini |
 | 저장 | 브라우저 로컬 저장소 (서재, 필기, 진도) |
 
-## ⚙️ 실행 방법
+## 실행 방법
 
 **필요 환경:** Node.js 18 이상
 
@@ -130,7 +130,7 @@ npm run dev
 | `OPENROUTER_TIMEOUT_MS` / `OPENROUTER_MAX_TOKENS` | 요청 제한 시간과 최대 토큰 수 |
 | `API_PORT` | API 서버 포트 (기본값 `5174`) |
 
-## 📁 폴더 구조
+## 폴더 구조
 
 ```
 querynote-ai/
@@ -142,7 +142,7 @@ querynote-ai/
 └── .env.example           # 환경 변수 템플릿
 ```
 
-## 🌿 브랜치 전략
+## 브랜치 전략
 
 | 브랜치 | 용도 |
 |---|---|
