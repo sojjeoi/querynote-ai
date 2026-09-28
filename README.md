@@ -1,77 +1,149 @@
+<div align="center">
+
 # QueryNote AI
 
-QueryNote AI는 데이터베이스 과목을 학습하는 학생들을 위한 AI 기반 인터랙티브 학습 노트입니다.
+**An AI-powered interactive study notebook for database courses.**
+Read lecture slides, run the SQL inside them, and let your mistakes shape what you review next — all in one flow.
 
-영어로 작성된 데이터베이스 강의자료 PDF를 읽으며, AI 설명, 페이지별 필기, SQL·ERD 실습, 퀴즈, 약점 노트를 하나의 흐름 안에서 사용할 수 있도록 설계한 학습 도구입니다.
+![React](https://img.shields.io/badge/React_18-61DAFB?logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite_6-646CFF?logo=vite&logoColor=white)
+![Express](https://img.shields.io/badge/Express_5-000000?logo=express&logoColor=white)
+![PDF.js](https://img.shields.io/badge/PDF.js-EC1C24?logo=adobeacrobatreader&logoColor=white)
+![Tesseract.js](https://img.shields.io/badge/Tesseract.js-OCR-3C873A)
+![LLM](https://img.shields.io/badge/LLM-OpenRouter%20·%20Groq%20·%20Gemini-8E75B2)
 
-## 프로젝트 목적
+<sub>Built for the 3rd Soongsil University Student Learning Method Competition (2026)</sub>
 
-소프트웨어학과 학생들은 데이터베이스 과목을 학습할 때 영어 강의자료, 개인 필기, AI 설명, SQL 실습 환경을 각각 따로 사용해야 하는 어려움을 겪습니다.
+</div>
 
-QueryNote AI는 이러한 분리된 학습 과정을 하나로 연결하여, 강의자료를 읽는 즉시 개념을 이해하고 직접 실습하며 자신의 약점을 추적할 수 있도록 돕는 것을 목표로 합니다.
+---
 
-## 주요 기능
+## The Problem
 
-- 서재 / 새 학습 선택
-- PDF 강의자료 업로드
-- PDF 페이지별 필기
-- AI 기반 개념 설명 및 필기 정리
-- SQL 코드 실행 흐름 시각화
-- 테이블 구조 및 ERD 확인
-- 회독 단계별 퀴즈
-- 오답 및 재설명 요청 기반 약점 노트
+Studying databases from English lecture slides is fragmented:
 
-## 화면 구성
+- Hit an unfamiliar concept → **copy-paste** the slide into a chatbot.
+- Get an explanation → **re-write it** into a separate note app.
+- Review before the exam → **juggle** the slides and the notes side by side.
+- SQL examples are **embedded as images**, so you can't actually run them.
+- There's **no record** of which concepts you keep getting wrong.
 
-1. 첫 화면  
-   - 서재와 새 학습 중 선택
+**QueryNote AI collapses that workflow into a single workspace** where reading, note-taking, hands-on SQL practice, and self-assessment are connected to the exact slide you're on.
 
-2. 서재 화면  
-   - 저장된 강의자료 목록 확인
-   - 마지막 학습 페이지, 회독 단계, 필기 수, 약점 개념 확인
-   - 이어서 학습하기
+## Features
 
-3. 새 학습 화면  
-   - PDF 업로드
-   - 과목명, 강의 제목, 회독 단계 입력
-   - 서재에 저장하고 학습 시작
+| | Feature | What it does |
+|---|---|---|
+| 📄 | **Slide-anchored reader** | Renders lecture PDFs with PDF.js. Notes are pinned to each page and restored when you return. |
+| 🔍 | **SQL extraction from slides** | Pulls SQL out of the PDF text layer. For image-only slides, it renders the page at high resolution and runs an OCR pipeline, then validates and auto-repairs the result with a SQL parser. |
+| 🧪 | **Interactive SQL sandbox** | Executes DDL, DML, and JOINs in the browser with row-level diffs: inserts in green, updates in yellow, deletes removed. Every run is recorded in an execution log. |
+| 🗺️ | **Live ERD generation** | `CREATE TABLE` statements instantly become an ERD with PK/FK relationships, so 1:1, 1:N, and M:N mappings can be built and seen in code. |
+| 🔁 | **Reading-pass modes** | 1st pass: detailed explanations, quizzes locked. 2nd pass: practice and quizzes unlocked. 3rd+ pass: condensed explanations and advanced questions. |
+| 🧠 | **LLM-generated quizzes** | Multiple-choice questions generated from the current slide and tuned to your reading pass, with instant feedback and links back to the source page. |
+| 📋 | **Weakness notebook** | Wrong answers and "explain again" requests are logged automatically with counts, dates, and source pages, giving you a personalized review list for exam prep. |
+| 📚 | **Library & resume** | Each lecture is a card showing your last page, reading pass, note count, and weak concepts. One click picks up exactly where you left off. |
 
-4. PDF 학습 탭  
-   - PDF 내용 확인
-   - AI 설명 확인
-   - 페이지별 필기 작성
-   - SQL 코드 실습 탭으로 전송
+### Supported SQL
 
-5. SQL·ERD 실습 탭  
-   - SQL 코드 입력 및 실행
-   - 테이블 구조 변화 확인
-   - ERD 시각화
-   - AI 실행 해설 확인
+- **DDL**: `CREATE TABLE`, `ALTER TABLE`, `DROP TABLE`
+- **DML**: `INSERT`, `UPDATE … WHERE`, `DELETE … WHERE`, `SELECT` with `WHERE`, `BETWEEN`, `IN`, `LIKE`, `DISTINCT`, `ORDER BY`, `GROUP BY`, aliases
+- **Joins**: `NATURAL`, `INNER`, `CROSS`, `LEFT OUTER`, `RIGHT OUTER`, self-join
+- **Constraints**: `PRIMARY KEY`, `FOREIGN KEY`, `NOT NULL`, `UNIQUE`
 
-6. 퀴즈 탭  
-   - 회독 단계에 따른 퀴즈 제공
-   - 정답/오답 피드백
-   - 관련 PDF 페이지 및 SQL 실습 연결
+## Architecture
 
-7. 약점 노트 탭  
-   - 오답 개념 자동 저장
-   - 재설명 요청 개념 기록
-   - 필기와 약점 개념 통합 관리
+```mermaid
+flowchart LR
+    subgraph Client["Browser · React 18 + Vite"]
+        PDF["PDF.js reader<br/>+ page-anchored notes"]
+        SQL["SQL sandbox<br/>+ row diffs"]
+        ERD["ERD renderer"]
+        QZ["Quiz & weakness notebook"]
+        ST[("Local storage<br/>library · notes · progress")]
+    end
 
-## 사용 기술
+    subgraph Server["API · Express 5"]
+        OCR["/api/extract-sql<br/>sharp preprocessing → Tesseract.js<br/>→ node-sql-parser validation"]
+        GEN["/api/generate-quiz<br/>cache → provider chain<br/>→ quality gate"]
+    end
 
-React
-JavaScript
-HTML/CSS
-AI 기반 학습 보조 기능
-GitHub 협업 관리
-팀 프로젝트 운영 방식
-main: 최종 제출 및 시연용 안정 버전
-develop: 기능 작업 및 테스트용 브랜치
+    LLM["OpenRouter → Groq → Gemini"]
 
-작업 중인 코드는 develop 브랜치에 올리고, 시연 가능한 상태가 되면 main 브랜치로 병합합니다.
+    PDF -- image-only slide --> OCR
+    OCR -- validated SQL --> SQL
+    SQL --> ERD
+    PDF -- slide text --> GEN
+    GEN <--> LLM
+    GEN --> QZ
+    PDF --> ST
+    QZ --> ST
+```
 
-## 기대 효과
+## Engineering Highlights
 
-QueryNote AI를 통해 학생들은 영어 강의자료를 읽으며 필요한 설명을 즉시 확인하고, SQL 코드를 직접 조작하며 데이터베이스 개념을 이해할 수 있습니다. 또한 퀴즈 오답과 재설명 요청이 약점 노트로 연결되어 시험 전 개인별 취약 개념을 중심으로 효율적인 복습이 가능합니다.
+**Resilient multi-provider LLM pipeline.** Quiz generation walks an ordered provider chain (`OpenRouter → Groq → Gemini`, configurable via `QUIZ_PROVIDER`). Each response goes through:
+1. Tolerant JSON extraction and repair.
+2. A quality gate that rejects malformed or off-topic questions and repairs mis-indexed answers.
+3. A retry with a compact prompt when too few questions pass.
 
+If every provider fails, a deterministic template generator takes over so the study flow never breaks. Results are cached by a content hash of the slide.
+
+**OCR tuned for code, not prose.** Slide images are upscaled (≥2.5×), converted to grayscale, normalized, and sharpened with `sharp` before Tesseract runs in sparse-text mode with a SQL-oriented character whitelist. OCR output is split into candidate statements, normalized, auto-repaired, validated with `node-sql-parser`, and scored. The best candidate is returned with a confidence score and the alternatives. An in-browser Tesseract.js path serves as a fallback.
+
+**Zero-key friendly.** Note summaries and SQL walkthroughs are generated on-device, and quizzes degrade gracefully to templates. The core study loop works without any API key.
+
+## Tech Stack
+
+| Layer | Tools |
+|---|---|
+| Frontend | React 18, Vite 6, PDF.js |
+| Backend | Node.js, Express 5, Multer |
+| OCR & SQL | Tesseract.js, sharp, node-sql-parser |
+| AI | OpenRouter, Groq, Google Gemini |
+| Persistence | Browser storage (library, notes, progress) |
+
+## Getting Started
+
+**Prerequisites:** Node.js 18+
+
+```bash
+git clone https://github.com/sojjeoi/querynote-ai.git
+cd querynote-ai
+npm install
+cp .env.example .env   # add at least one LLM API key (optional)
+npm run dev
+```
+
+`npm run dev` starts the Vite dev server and the API server (port `5174`) together. Vite proxies `/api` requests to the API automatically.
+
+### Environment Variables
+
+| Variable | Description |
+|---|---|
+| `OPENROUTER_API_KEY` / `OPENROUTER_MODEL` | OpenRouter credentials and model list (comma-separated) |
+| `GROQ_API_KEY` / `GROQ_MODEL` | Groq credentials and model |
+| `GEMINI_API_KEY` / `GEMINI_MODEL` | Google Gemini credentials and model |
+| `QUIZ_PROVIDER` | Provider fallback order, e.g. `openrouter,groq,gemini` |
+| `OPENROUTER_TIMEOUT_MS` / `OPENROUTER_MAX_TOKENS` | Request timeout and token limits |
+| `API_PORT` | API server port (default `5174`) |
+
+## Project Structure
+
+```
+querynote-ai/
+├── querynote.jsx          # App UI: library, PDF reader, SQL/ERD lab, quiz, weakness notebook
+├── src/main.jsx           # Entry point + browser storage adapter
+├── server.js              # Express API: OCR extraction & LLM quiz generation
+├── sql-recognition.js     # SQL block extraction, OCR normalization, validation & scoring
+├── vite.config.js         # Dev server + /api proxy
+└── .env.example           # Environment variable template
+```
+
+## Branch Strategy
+
+| Branch | Purpose |
+|---|---|
+| `main` | Stable build for submission and demos |
+| `develop` | Active feature work and testing |
+
+Work lands on `develop` first and is merged into `main` once it's demo-ready.
