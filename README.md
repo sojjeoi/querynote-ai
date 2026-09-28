@@ -52,32 +52,9 @@
 
 ## 아키텍처
 
-```mermaid
-flowchart LR
-    subgraph Client["브라우저 · React 18 + Vite"]
-        PDF["PDF.js 뷰어<br/>+ 페이지별 필기"]
-        SQL["SQL 실습<br/>+ 행 변화 시각화"]
-        ERD["ERD 렌더러"]
-        QZ["퀴즈 & 약점 노트"]
-        ST[("로컬 저장소<br/>서재 · 필기 · 진도")]
-    end
-
-    subgraph Server["API · Express 5"]
-        OCR["/api/extract-sql<br/>sharp 전처리 → Tesseract.js<br/>→ node-sql-parser 검증"]
-        GEN["/api/generate-quiz<br/>캐시 → 제공자 체인<br/>→ 품질 검증"]
-    end
-
-    LLM["OpenRouter → Groq → Gemini"]
-
-    PDF -- 이미지 슬라이드 --> OCR
-    OCR -- 검증된 SQL --> SQL
-    SQL --> ERD
-    PDF -- 슬라이드 텍스트 --> GEN
-    GEN <--> LLM
-    GEN --> QZ
-    PDF --> ST
-    QZ --> ST
-```
+<p align="center">
+  <img src="docs/architecture.svg" alt="QueryNote AI 아키텍처" width="100%">
+</p>
 
 ## 기술적 특징
 
